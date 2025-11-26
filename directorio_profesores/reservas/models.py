@@ -57,7 +57,6 @@ class Profesor(models.Model):
         """Retorna el número total de reseñas"""
         return self.resenas.count()
 
-
 class Materia(models.Model):
     id_materia = models.AutoField(primary_key=True)
     nombre_materia = models.CharField(max_length=200)

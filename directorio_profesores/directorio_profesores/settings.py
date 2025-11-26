@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'directorio_profesores',
     'reservas',
 ]
 
@@ -76,10 +77,10 @@ WSGI_APPLICATION = 'directorio_profesores.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',  
-        'NAME': 'db_directorio_profesores',                
+        'NAME': 'db_directorio',                
         'USER': 'root',                     
-        'PASSWORD': '123456',    
-        'HOST': '127.0.0.1',                 
+        'PASSWORD': 'Pingorocho1235/',    
+        'HOST': 'localhost',                 
         'PORT': '3306',                      
     }
 }

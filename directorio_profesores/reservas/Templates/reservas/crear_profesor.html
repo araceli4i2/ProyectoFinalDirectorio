@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Crear Nuevo Profesor{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>➕ Agregar Nuevo Profesor</h1>
+    
+    <form method="POST">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="{{ form.nombre.id_for_label }}">{{ form.nombre.label }}</label>
+            {{ form.nombre }}
+            {% if form.nombre.errors %}
+                <div class="alert alert-danger" style="margin-top: 0.5rem;">
+                    {{ form.nombre.errors }}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.apellido.id_for_label }}">{{ form.apellido.label }}</label>
+            {{ form.apellido }}
+            {% if form.apellido.errors %}
+                <div class="alert alert-danger" style="margin-top: 0.5rem;">
+                    {{ form.apellido.errors }}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.especialidad.id_for_label }}">{{ form.especialidad.label }}</label>
+            {{ form.especialidad }}
+            {% if form.especialidad.errors %}
+                <div class="alert alert-danger" style="margin-top: 0.5rem;">
+                    {{ form.especialidad.errors }}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.salario.id_for_label }}">{{ form.salario.label }}</label>
+            {{ form.salario }}
+            {% if form.salario.errors %}
+                <div class="alert alert-danger" style="margin-top: 0.5rem;">
+                    {{ form.salario.errors }}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div style="display: flex; gap: 1rem;">
+            <button type="submit" class="btn">💾 Guardar Profesor</button>
+            <a href="{% url 'listar_profesores' %}" class="btn btn-secondary">❌ Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
