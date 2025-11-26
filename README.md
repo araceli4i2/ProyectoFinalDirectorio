@@ -42,7 +42,7 @@ ESTRCUTURA DEL PROYECTO:
 INSTALACION.- <br> 
 1.- Para clonar el repositorio:<br>
 (clonalo en una carpeta vacia)<br>
-" git clone https://github.com/araceli4i2/ProyDirectorio_de_Profesores.git " 
+" git clone https://github.com/araceli4i2/ProyectoFinalDirectorio.git " 
 <br>
 2.- Crear y activar el entorno virtual (venv) <br>
 python -m venv env <br> 
