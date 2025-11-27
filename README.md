@@ -12,7 +12,7 @@
 4. [Instalación y Configuración](#instalación-y-configuración)
 5. [Uso y Ejecución](#uso-y-ejecución)
 
----
+
 
 ## Integrantes
 
@@ -24,30 +24,41 @@ Este proyecto fue desarrollado por:
 * **Raquel Araceli Serrano Mamani** — C.I.: 9250244
 * **Zamora Paredes Amilcar Brandon** — C.I.: 14793345
 
----
+
 
 ## Acerca del Proyecto
 
 
 
----
 
-## Estructura del Proyecto
+### Estructura del Proyecto
 
 La estructura de directorios principal es la siguiente:
 
----
 
-## Instalación y Configuración
+
+### Instalación y Configuración
 
 Sigue estos pasos para poner en marcha el proyecto:
 
-### 1. Clonar el Repositorio
+### Clonar el Repositorio
 
 ```bash
 git clone [https://github.com/araceli4i2/ProyectoFinalDirectorio.git](https://github.com/araceli4i2/ProyectoFinalDirectorio.git)
 cd ProyectoFinalDirectorio
 ````
+
+## Uso y Ejecución
+### 1. Base de Datos y Migraciones
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+### 2. Iniciar el Servidor
+```bash
+python manage.py runserver
+```
+
 
 
 
