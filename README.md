@@ -7,9 +7,9 @@
 3. [Estructura](#-estructura-del-proyecto)
 4. [Instalación y Configuración](#-instalación-y-configuración)
 5. [Uso y Ejecución](#-uso-y-ejecución)
-6. [Integrantes](#-integrantes)
 
 
+</br>
 ## 🙋‍♂️ Integrantes
 </br>
 Arze Cachi Kevin Fabrizio         C.I. : 78785809<br>
@@ -17,9 +17,12 @@ Duran Alipaz Deysly Beatriz         C.I. : 64388344<br>
 Herrera Bonilla Thaime Helen         C.I. : 72053905<br>
 Raquel Araceli Serrano Mamani         C.I. : 9250244<br>
 Zamora Paredes Amilcar Brandon         C.I. : 14793345<br>
+
 <br>
-ESTRCUTURA DEL PROYECTO:
+## Acerca del Proyecto
+## 🌲 Estructura
 <br>
+
 ````
 ª   README.md
 ª   
@@ -50,16 +53,27 @@ ESTRCUTURA DEL PROYECTO:
 +---env
 ````
 <br>
-INSTALACION.- <br> 
-1.- Para clonar el repositorio:<br>
-(clonalo en una carpeta vacia)<br>
-" git clone https://github.com/araceli4i2/ProyectoFinalDirectorio.git " 
+## 🌲 Instalación y Configuración
+</br>
+
+*1.- Clonar Repositorio* (Recomendacióm: clonalo en una carpeta vacia) </br>
+git clone https://github.com/araceli4i2/ProyectoFinalDirectorio.git </br>
+*2.- Entronno Virtual*</br>
+python -m venv env</br>
+.\env\Scripts\activate</br>
+*3.- Instalación de Dependencias* <br> 
+pip install -r requirements.txt</br>
+
 <br>
-2.- Crear y activar el entorno virtual (venv) <br>
-python -m venv env <br> 
-" .\env\Scripts\activate "
-<br>
-3.- instalar dependencias<br>
-<br> pip install -r requirements.txt " <br> es cribi esto pero no se ve tan bonito como lo harias para que sea vea bonito
+## 🎲 Uso y Ejecución
+</br>
+1.- Migraciones </br>
+python manage.py makemigrations</br>
+python manage.py migrate</br>
+
+2.- Iniciar el servidor</br>
+py manage.py runserver</br>
+
+
 
 
