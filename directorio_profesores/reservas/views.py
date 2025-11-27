@@ -1,13 +1,10 @@
-from django.shortcuts import render
-
-# Create your views here.
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Q, Avg
 from django.contrib import messages
 from .models import Profesor, Materia, Alumno, ReservaClase, Resena
 from .forms import (
-    ProfesorForm, AlumnoForm # MateriaForm, 
-    #ReservaClaseForm, ResenaForm, BusquedaForm
+    ProfesorForm, AlumnoForm, MateriaForm, 
+    ReservaClaseForm, ResenaForm, BusquedaForm
 )
 
 # ============= VISTA PRINCIPAL/HOME =============
@@ -39,6 +36,45 @@ def home(request):
             'total_reservas': 0,
             'total_alumnos': 0,
         })
+
+# ============= BÚSQUEDA =============
+
+def buscar(request):
+    form = BusquedaForm(request.GET)
+    profesores = Profesor.objects.all()
+    materias = Materia.objects.all()
+    query = ''
+    materia_filter = ''
+    
+    if form.is_valid():
+        query = form.cleaned_data.get('q', '')
+        materia_filter = form.cleaned_data.get('materia', '')
+        
+        if query:
+            # Buscar en nombre, apellido o especialidad del profesor
+            profesores = profesores.filter(
+                Q(nombre__icontains=query) |
+                Q(apellido__icontains=query) |
+                Q(especialidad__icontains=query)
+            )
+        
+        if materia_filter:
+            # Filtrar profesores que enseñan una materia específica
+            profesores = profesores.filter(
+                materias__nombre_materia__icontains=materia_filter
+            ).distinct()
+    
+    # Agregar promedio de calificación a cada profesor
+    for profesor in profesores:
+        profesor.promedio = profesor.get_promedio_calificacion()
+    
+    return render(request, 'reservas/buscar.html', {
+        'form': form,
+        'profesores': profesores,
+        'materias': materias,
+        'query': query,
+        'materia_filter': materia_filter,
+    })
 
 # ============= VISTAS DE PROFESORES =============
 
@@ -218,4 +254,246 @@ def eliminar_alumno(request, id_alumno):
     
     return render(request, 'reservas/confirmar_eliminar_alumno.html', {
         'alumno': alumno
+    })
+
+# ============= VISTAS DE MATERIAS =============
+
+def listar_materias(request):
+    materias = Materia.objects.all().select_related('id_profesor')
+
+    query = request.GET.get('q', '')
+    prof = request.GET.get('profesor', '')
+
+    if query:
+        materias = materias.filter(
+            Q(nombre_materia__icontains=query) |
+            Q(sigla__icontains=query)
+        )
+
+    if prof:
+        materias = materias.filter(id_profesor__id_profesor=prof)
+
+    profesores = Profesor.objects.all()
+
+    return render(request, 'reservas/lista_materias.html', {
+        'materias': materias,
+        'profesores': profesores,
+        'query': query,
+        'prof': prof,
+    })
+
+
+def detalle_materia(request, id_materia):
+    materia = get_object_or_404(Materia, id_materia=id_materia)
+    profesor = materia.id_profesor
+    reservas = materia.reservas.all()
+
+    return render(request, 'reservas/detalle_materia.html', {
+        'materia': materia,
+        'profesor': profesor,
+        'reservas': reservas
+    })
+
+
+def crear_materia(request):
+    if request.method == 'POST':
+        form = MateriaForm(request.POST)
+        if form.is_valid():
+            try:
+                profesor = get_object_or_404(Profesor, id_profesor=form.cleaned_data['id_profesor'])
+                Materia.objects.create(
+                    nombre_materia=form.cleaned_data['nombre_materia'],
+                    sigla=form.cleaned_data['sigla'],
+                    duracion=form.cleaned_data['duracion'],
+                    precio=form.cleaned_data['precio'],
+                    id_profesor=profesor
+                )
+                messages.success(request, 'Materia creada exitosamente.')
+                return redirect('listar_materias')
+            except Exception as e:
+                messages.error(request, f'Error al crear materia: {str(e)}')
+    else:
+        form = MateriaForm()
+    
+    return render(request, 'reservas/crear_materia.html', {'form': form})
+
+def editar_materia(request, id_materia):
+    materia = get_object_or_404(Materia, id_materia=id_materia)
+    
+    if request.method == 'POST':
+        form = MateriaForm(request.POST)
+        if form.is_valid():
+            try:
+                profesor = get_object_or_404(Profesor, id_profesor=form.cleaned_data['id_profesor'])
+                materia.nombre_materia = form.cleaned_data['nombre_materia']
+                materia.sigla = form.cleaned_data['sigla']
+                materia.duracion = form.cleaned_data['duracion']
+                materia.precio = form.cleaned_data['precio']
+                materia.id_profesor = profesor
+                materia.save()
+                messages.success(request, 'Materia actualizada exitosamente.')
+                return redirect('listar_materias')
+            except Exception as e:
+                messages.error(request, f'Error al actualizar materia: {str(e)}')
+    else:
+        form = MateriaForm(initial={
+            'nombre_materia': materia.nombre_materia,
+            'sigla': materia.sigla,
+            'duracion': materia.duracion,
+            'precio': materia.precio,
+            'id_profesor': materia.id_profesor.id_profesor,
+        })
+    
+    return render(request, 'reservas/editar_materia.html', {
+        'form': form,
+        'materia': materia
+    })
+
+def eliminar_materia(request, id_materia):
+    materia = get_object_or_404(Materia, id_materia=id_materia)
+    
+    if request.method == 'POST':
+        try:
+            nombre_materia = materia.nombre_materia
+            materia.delete()
+            messages.success(request, f'Materia {nombre_materia} eliminada exitosamente.')
+            return redirect('listar_materias')
+        except Exception as e:
+            messages.error(request, f'Error al eliminar materia: {str(e)}')
+            return redirect('listar_materias')
+    
+    return render(request, 'reservas/confirmar_eliminar_materia.html', {
+        'materia': materia
+    })
+
+# ============= RESERVAS =============
+
+def solicitar_clase(request, id_profesor):
+    profesor = get_object_or_404(Profesor, id_profesor=id_profesor)
+    
+    if request.method == 'POST':
+        form = ReservaClaseForm(request.POST, profesor_id=id_profesor)
+        if form.is_valid():
+            try:
+                alumno = get_object_or_404(Alumno, id_alumno=form.cleaned_data['id_alumno'])
+                materia = get_object_or_404(Materia, id_materia=form.cleaned_data['id_materia'])
+                
+                ReservaClase.objects.create(
+                    id_alumno=alumno,
+                    id_profesor=profesor,
+                    id_materia=materia,
+                    requerimientos=form.cleaned_data['requerimientos'],
+                    estado='Pendiente'
+                )
+                
+                messages.success(request, 'Clase solicitada exitosamente. Estado: Pendiente')
+                return redirect('mis_reservas')
+            except Exception as e:
+                messages.error(request, f'Error al solicitar clase: {str(e)}')
+    else:
+        form = ReservaClaseForm(profesor_id=id_profesor)
+    
+    return render(request, 'reservas/solicitar_clase.html', {
+        'form': form,
+        'profesor': profesor,
+    })
+
+def mis_reservas(request):
+    try:
+        reservas = ReservaClase.objects.all().select_related(
+            'id_alumno', 'id_profesor', 'id_materia'
+        ).order_by('-fecha_reserva')
+        
+        return render(request, 'reservas/mis_reservas.html', {
+            'reservas': reservas
+        })
+    except Exception as e:
+        messages.error(request, f'Error al cargar reservas: {str(e)}')
+        return render(request, 'reservas/mis_reservas.html', {
+            'reservas': []
+        })
+
+def cambiar_estado_reserva(request, id_reserva):
+    reserva = get_object_or_404(ReservaClase, id_reserva=id_reserva)
+    
+    if request.method == 'POST':
+        nuevo_estado = request.POST.get('estado')
+        if nuevo_estado in ['Pendiente', 'Confirmada', 'Cancelada', 'Completada']:
+            try:
+                reserva.estado = nuevo_estado
+                reserva.save()
+                messages.success(request, f'Estado de reserva cambiado a: {nuevo_estado}')
+            except Exception as e:
+                messages.error(request, f'Error al cambiar estado: {str(e)}')
+        else:
+            messages.error(request, 'Estado no válido.')
+    
+    return redirect('mis_reservas')
+
+def eliminar_reserva(request, id_reserva):
+    reserva = get_object_or_404(ReservaClase, id_reserva=id_reserva)
+    
+    if request.method == 'POST':
+        try:
+            reserva.delete()
+            messages.success(request, 'Reserva eliminada exitosamente.')
+            return redirect('mis_reservas')
+        except Exception as e:
+            messages.error(request, f'Error al eliminar reserva: {str(e)}')
+            return redirect('mis_reservas')
+    
+    return render(request, 'reservas/confirmar_eliminar_reserva.html', {
+        'reserva': reserva
+    })
+
+# ============= RESEÑAS =============
+
+def agregar_resena(request, id_profesor):
+    profesor = get_object_or_404(Profesor, id_profesor=id_profesor)
+    
+    if request.method == 'POST':
+        form = ResenaForm(request.POST)
+        if form.is_valid():
+            try:
+                alumno = get_object_or_404(Alumno, id_alumno=form.cleaned_data['id_alumno'])
+                
+                # Verificar si ya existe una reseña de este alumno para este profesor
+                if Resena.objects.filter(id_profesor=profesor, id_alumno=alumno).exists():
+                    messages.warning(request, 'Ya has dejado una reseña para este profesor.')
+                    return redirect('detalle_profesor', id_profesor=id_profesor)
+                
+                Resena.objects.create(
+                    id_profesor=profesor,
+                    id_alumno=alumno,
+                    calificacion=form.cleaned_data['calificacion'],
+                    comentario=form.cleaned_data['comentario']
+                )
+                
+                messages.success(request, 'Reseña agregada exitosamente.')
+                return redirect('detalle_profesor', id_profesor=id_profesor)
+            except Exception as e:
+                messages.error(request, f'Error al agregar reseña: {str(e)}')
+    else:
+        form = ResenaForm()
+    
+    return render(request, 'reservas/agregar_resena.html', {
+        'form': form,
+        'profesor': profesor,
+    })
+
+def eliminar_resena(request, id_resena):
+    resena = get_object_or_404(Resena, id_resena=id_resena)
+    id_profesor = resena.id_profesor.id_profesor
+    
+    if request.method == 'POST':
+        try:
+            resena.delete()
+            messages.success(request, 'Reseña eliminada exitosamente.')
+            return redirect('detalle_profesor', id_profesor=id_profesor)
+        except Exception as e:
+            messages.error(request, f'Error al eliminar reseña: {str(e)}')
+            return redirect('detalle_profesor', id_profesor=id_profesor)
+    
+    return render(request, 'reservas/confirmar_eliminar_resena.html', {
+        'resena': resena
     })
