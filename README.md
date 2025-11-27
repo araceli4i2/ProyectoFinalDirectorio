@@ -14,7 +14,7 @@
 
 ---
 
-## 🧑‍🤝‍🧑 Integrantes
+## Integrantes
 
 Este proyecto fue desarrollado por:
 
@@ -26,19 +26,19 @@ Este proyecto fue desarrollado por:
 
 ---
 
-## 💡 Acerca del Proyecto
+## Acerca del Proyecto
 
 
 
 ---
 
-## 🌲 Estructura del Proyecto
+## Estructura del Proyecto
 
 La estructura de directorios principal es la siguiente:
 
 ---
 
-## ⚙️ Instalación y Configuración
+## Instalación y Configuración
 
 Sigue estos pasos para poner en marcha el proyecto:
 
