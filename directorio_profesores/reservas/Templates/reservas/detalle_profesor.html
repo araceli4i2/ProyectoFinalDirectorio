@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ profesor.nombre }} {{ profesor.apellido }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>👨‍🏫 {{ profesor.nombre }} {{ profesor.apellido }}</h1>
+    
+    <p><strong>Especialidad:</strong> {{ profesor.especialidad }}</p>
+    <p><strong>Calificación Promedio:</strong> {{ promedio_calificacion|floatformat:1 }}⭐ ({{ total_resenas }} reseñas)</p>
+    <p><strong>Salario por hora:</strong> ${{ profesor.salario }}</p>
+    
+    <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+        <a href="{% url 'solicitar_clase' profesor.id_profesor %}" class="btn">📚 Solicitar Clase</a>
+        <a href="{% url 'agregar_resena' profesor.id_profesor %}" class="btn">⭐ Dejar Reseña</a>
+        <a href="{% url 'editar_profesor' profesor.id_profesor %}" class="btn btn-secondary">✏️ Editar</a>
+        <a href="{% url 'eliminar_profesor' profesor.id_profesor %}" class="btn btn-danger">🗑️ Eliminar</a>
+    </div>
+</div>
+
+{% if materias %}
+<div class="card">
+    <h2>📚 Materias que Imparte</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Materia</th>
+                <th>Sigla</th>
+                <th>Duración (hrs)</th>
+                <th>Precio</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for materia in materias %}
+            <tr>
+                <td>{{ materia.nombre_materia }}</td>
+                <td>{{ materia.sigla }}</td>
+                <td>{{ materia.duracion }}</td>
+                <td>${{ materia.precio }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+{% if resenas %}
+<div class="card">
+    <h2>💬 Reseñas y Calificaciones</h2>
+    {% for resena in resenas %}
+    <div style="border-bottom: 1px solid #ddd; padding: 1rem 0;">
+        <p><strong>{{ resena.id_alumno.nombre }} {{ resena.id_alumno.apellido }}</strong> - {{ resena.calificacion }}⭐</p>
+        <p style="color: #666; font-size: 0.9rem;">{{ resena.fecha|date:"d/m/Y H:i" }}</p>
+        <p>{{ resena.comentario }}</p>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="card">
+    <p>Este profesor aún no tiene reseñas. ¡Sé el primero en calificarlo!</p>
+    <a href="{% url 'agregar_resena' profesor.id_profesor %}" class="btn">⭐ Dejar la primera reseña</a>
+</div>
+{% endif %}
+{% endblock %}

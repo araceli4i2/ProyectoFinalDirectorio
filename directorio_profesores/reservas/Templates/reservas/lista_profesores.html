@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Profesores{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Directorio de Profesores</h1>
+    <a href="{% url 'crear_profesor' %}" class="btn">+ Agregar Nuevo Profesor</a>
+    
+    {% if profesores %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Especialidad</th>
+                    <th>Salario</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for profesor in profesores %}
+                <tr>
+                    <td>{{ profesor.id_profesor }}</td>
+                    <td>{{ profesor.nombre }}</td>
+                    <td>{{ profesor.apellido }}</td>
+                    <td>{{ profesor.especialidad }}</td>
+                    <td>${{ profesor.salario }}</td>
+                    <td>
+                        <a href="{% url 'detalle_profesor' profesor.id_profesor %}" class="btn" style="padding: 0.3rem 0.6rem;">Ver</a>
+                        <a href="{% url 'editar_profesor' profesor.id_profesor %}" class="btn btn-secondary" style="padding: 0.3rem 0.6rem;">Editar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info">
+            <p>No hay profesores registrados. <a href="{% url 'crear_profesor' %}">Agregar uno ahora</a></p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
