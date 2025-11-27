@@ -1,13 +1,13 @@
 ## Proyecto Final: Directorio de profesores
 ### ProgramacionWeb III inf-133
-````## 📋 Tabla de Contenidos
+## 📋 Tabla de Contenidos
 
 1. [Acerca del Proyecto](#-acerca-del-proyecto)
 2. [Estructura](#-estructura-del-proyecto)
 3. [Instalación y Configuración](#-instalación-y-configuración)
 4. [Uso y Ejecución](#-uso-y-ejecución)
 5. [Integrantes](#-integrantes)
-````
+
 
 Integrantes:</br>
 Arze Cachi Kevin Fabrizio         C.I. : 78785809<br>
