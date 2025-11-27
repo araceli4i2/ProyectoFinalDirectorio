@@ -6,7 +6,7 @@ from django.db.models import Q, Avg
 from django.contrib import messages
 from .models import Profesor, Materia, Alumno, ReservaClase, Resena
 from .forms import (
-    ProfesorForm # AlumnoForm, MateriaForm, 
+    ProfesorForm, AlumnoForm # MateriaForm, 
     #ReservaClaseForm, ResenaForm, BusquedaForm
 )
 
@@ -141,4 +141,81 @@ def eliminar_profesor(request, id_profesor):
     
     return render(request, 'reservas/confirmar_eliminar.html', {
         'profesor': profesor
+    })
+
+# ============= VISTAS DE ALUMNOS =============
+
+def listar_alumnos(request):
+    try:
+        alumnos = Alumno.objects.all()
+        return render(request, 'reservas/lista_alumnos.html', {
+            'alumnos': alumnos
+        })
+    except Exception as e:
+        messages.error(request, f'Error al listar alumnos: {str(e)}')
+        return render(request, 'reservas/lista_alumnos.html', {
+            'alumnos': []
+        })
+
+def crear_alumno(request):
+    if request.method == 'POST':
+        form = AlumnoForm(request.POST)
+        if form.is_valid():
+            try:
+                Alumno.objects.create(
+                    nombre=form.cleaned_data['nombre'],
+                    apellido=form.cleaned_data['apellido'],
+                    ci=form.cleaned_data['ci']
+                )
+                messages.success(request, 'Alumno creado exitosamente.')
+                return redirect('listar_alumnos')
+            except Exception as e:
+                messages.error(request, f'Error al crear alumno: {str(e)}')
+    else:
+        form = AlumnoForm()
+    
+    return render(request, 'reservas/crear_alumno.html', {'form': form})
+
+def editar_alumno(request, id_alumno):
+    alumno = get_object_or_404(Alumno, id_alumno=id_alumno)
+    
+    if request.method == 'POST':
+        form = AlumnoForm(request.POST)
+        if form.is_valid():
+            try:
+                alumno.nombre = form.cleaned_data['nombre']
+                alumno.apellido = form.cleaned_data['apellido']
+                alumno.ci = form.cleaned_data['ci']
+                alumno.save()
+                messages.success(request, 'Alumno actualizado exitosamente.')
+                return redirect('listar_alumnos')
+            except Exception as e:
+                messages.error(request, f'Error al actualizar alumno: {str(e)}')
+    else:
+        form = AlumnoForm(initial={
+            'nombre': alumno.nombre,
+            'apellido': alumno.apellido,
+            'ci': alumno.ci,
+        })
+    
+    return render(request, 'reservas/editar_alumno.html', {
+        'form': form,
+        'alumno': alumno
+    })
+
+def eliminar_alumno(request, id_alumno):
+    alumno = get_object_or_404(Alumno, id_alumno=id_alumno)
+    
+    if request.method == 'POST':
+        try:
+            nombre_completo = alumno.get_nombre_completo()
+            alumno.delete()
+            messages.success(request, f'Alumno {nombre_completo} eliminado exitosamente.')
+            return redirect('listar_alumnos')
+        except Exception as e:
+            messages.error(request, f'Error al eliminar alumno: {str(e)}')
+            return redirect('listar_alumnos')
+    
+    return render(request, 'reservas/confirmar_eliminar_alumno.html', {
+        'alumno': alumno
     })
