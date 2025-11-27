@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="my-3">{{ materia.nombre_materia }} ({{ materia.sigla }})</h2>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title">Profesor: {{ profesor.get_nombre_completo }}</h5>
+        <p><strong>Duración:</strong> {{ materia.duracion }} horas</p>
+        <p><strong>Precio:</strong> {{ materia.precio }} Bs</p>
+    </div>
+</div>
+
+<h4>Reservas Asociadas</h4>
+<ul class="list-group">
+    {% for r in reservas %}
+        <li class="list-group-item">
+            {{ r.id_alumno.get_nombre_completo }} - {{ r.estado }}
+        </li>
+    {% empty %}
+        <li class="list-group-item">Sin reservas</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'editar_materia' materia.id_materia %}" class="btn btn-warning mt-3">Editar</a>
+<a href="{% url 'eliminar_materia' materia.id_materia %}" class="btn btn-danger mt-3">Eliminar</a>
+
+{% endblock %}

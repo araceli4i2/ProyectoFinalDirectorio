@@ -1,10 +1,9 @@
 from django.urls import path
 from . import views
 
-#app_name = 'reservas'
 
 urlpatterns = [
-	path('', views.home, name='home'),
+    path('', views.home, name='home'),
     path('buscar/', views.buscar, name='buscar'),
     
     # URLs de profesores
@@ -13,5 +12,19 @@ urlpatterns = [
     path('profesores/crear/', views.crear_profesor, name='crear_profesor'),
     path('profesores/editar/<int:id_profesor>/', views.editar_profesor, name='editar_profesor'),
     path('profesores/eliminar/<int:id_profesor>/', views.eliminar_profesor, name='eliminar_profesor'),
+
+    # URLs de materias
+    path('materias/', views.listar_materias, name='listar_materias'),
+    path('materias/crear/', views.crear_materia, name='crear_materia'),
+    path('materias/<int:id_materia>/', views.detalle_materia, name='detalle_materia'),
+    path('materias/editar/<int:id_materia>/', views.editar_materia, name='editar_materia'),
+    path('materias/eliminar/<int:id_materia>/', views.eliminar_materia, name='eliminar_materia'),
+
     
+    # URLs de reservas
+    path('solicitar-clase/<int:id_profesor>/', views.solicitar_clase, name='solicitar_clase'),
+    path('mis-reservas/', views.mis_reservas, name='mis_reservas'),
+    
+    # URLs de reseñas
+    path('agregar-resena/<int:id_profesor>/', views.agregar_resena, name='agregar_resena'),
 ]
