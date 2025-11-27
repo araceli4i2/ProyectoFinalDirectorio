@@ -41,3 +41,32 @@ class ProfesorForm(forms.Form):
             'step': '0.01'
         })
     )
+
+class AlumnoForm(forms.Form):
+    nombre = forms.CharField(
+        label="Nombre",
+        required=True,
+        max_length=100,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Ingrese el nombre del alumno'
+        })
+    )
+    apellido = forms.CharField(
+        label="Apellido",
+        required=True,
+        max_length=100,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Ingrese el apellido del alumno'
+        })
+    )
+    ci = forms.CharField(
+        label="CI (Carnet de Identidad)",
+        required=True,
+        max_length=20,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Ingrese el CI'
+        })
+    )
