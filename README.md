@@ -2,14 +2,16 @@
 ### ProgramacionWeb III inf-133
 ## 📋 Tabla de Contenidos
 
-1. [Acerca del Proyecto](#-acerca-del-proyecto)
-2. [Estructura](#-estructura-del-proyecto)
-3. [Instalación y Configuración](#-instalación-y-configuración)
-4. [Uso y Ejecución](#-uso-y-ejecución)
-5. [Integrantes](#-integrantes)
+1. [Integrantes](#-Integrantes)
+2. [Acerca del Proyecto](#-acerca-del-proyecto)
+3. [Estructura](#-estructura-del-proyecto)
+4. [Instalación y Configuración](#-instalación-y-configuración)
+5. [Uso y Ejecución](#-uso-y-ejecución)
+6. [Integrantes](#-integrantes)
 
 
-Integrantes:</br>
+## 🙋‍♂️ Integrantes
+</br>
 Arze Cachi Kevin Fabrizio         C.I. : 78785809<br>
 Duran Alipaz Deysly Beatriz         C.I. : 64388344<br>
 Herrera Bonilla Thaime Helen         C.I. : 72053905<br>
