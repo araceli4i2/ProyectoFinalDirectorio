@@ -19,12 +19,13 @@ urlpatterns = [
     path('materias/<int:id_materia>/', views.detalle_materia, name='detalle_materia'),
     path('materias/editar/<int:id_materia>/', views.editar_materia, name='editar_materia'),
     path('materias/eliminar/<int:id_materia>/', views.eliminar_materia, name='eliminar_materia'),
-
     
     # URLs de reservas
     path('solicitar-clase/<int:id_profesor>/', views.solicitar_clase, name='solicitar_clase'),
     path('mis-reservas/', views.mis_reservas, name='mis_reservas'),
     
-    # URLs de reseñas
+      # URLs de reseñas
     path('agregar-resena/<int:id_profesor>/', views.agregar_resena, name='agregar_resena'),
+
+
 ]

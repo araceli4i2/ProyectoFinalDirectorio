@@ -497,3 +497,4 @@ def eliminar_resena(request, id_resena):
     return render(request, 'reservas/confirmar_eliminar_resena.html', {
         'resena': resena
     })
+

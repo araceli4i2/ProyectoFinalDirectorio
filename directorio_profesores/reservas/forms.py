@@ -135,8 +135,6 @@ class MateriaForm(forms.Form):
         #    for p in Profesor.objects.all()
        # ]
 
-
-
 class ReservaClaseForm(forms.Form):
     id_alumno = forms.ChoiceField(
         label="Alumno",
@@ -189,29 +187,6 @@ class ReservaClaseForm(forms.Form):
                 for m in materias
             ]
     
-    #def __init__(self, *args, **kwargs):
-     #   profesor_id = kwargs.pop('profesor_id', None)
-      #  super().__init__(*args, **kwargs)
-        
-        # Llenar el dropdown de alumnos
-       # self.fields['id_alumno'].choices = [('', 'Seleccione un alumno')] + [
-        #    (a.id_alumno, f"{a.nombre} {a.apellido}") 
-          #  for a in Alumno.objects.all()
-        #]
-        
-        # Llenar el dropdown de materias filtradas por profesor
-        #if profesor_id:
-         #   materias = Materia.objects.filter(id_profesor_id=profesor_id)
-          #  self.fields['id_materia'].choices = [('', 'Seleccione una materia')] + [
-           #     (m.id_materia, f"{m.nombre_materia} - {m.sigla}") 
-            #    for m in materias
-            #]
-        #else:
-         #   self.fields['id_materia'].choices = [('', 'Seleccione una materia')] + [
-          #      (m.id_materia, f"{m.nombre_materia} - {m.sigla}") 
-           #     for m in Materia.objects.all()
-            #]
-
 class ResenaForm(forms.Form):
     id_alumno = forms.ChoiceField(
         label="Alumno",
