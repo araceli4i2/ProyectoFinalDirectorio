@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Inicio - Directorio de Profesores{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Bienvenido al Sistema de Gestión de Profesores</h1>
+    <p>Este sistema te permite gestionar profesores, materias y reservas de clases.</p>
+    
+    <h2>Acciones Rápidas</h2>
+    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+        <a href="{% url 'listar_profesores' %}" class="btn">Ver Profesores</a>
+        <a href="{% url 'crear_profesor' %}" class="btn">Agregar Profesor</a>
+        <a href="/admin/" class="btn btn-secondary">Panel de Admin</a>
+    </div>
+</div>
+{% endblock %}

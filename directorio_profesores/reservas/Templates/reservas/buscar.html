@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Buscar Profesores{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>🔍 Buscar Profesores por Materia o Especialidad</h1>
+    
+    <form method="GET" style="margin-bottom: 2rem;">
+        <div class="form-group">
+            <label for="q">Buscar por nombre o especialidad:</label>
+            <input type="text" id="q" name="q" value="{{ query }}" placeholder="Ej: Matemáticas, Juan, Inglés...">
+        </div>
+        
+        <div class="form-group">
+            <label for="materia">Filtrar por materia:</label>
+            <input type="text" id="materia" name="materia" value="{{ materia_filter }}" placeholder="Ej: Cálculo, Programación...">
+        </div>
+        
+        <button type="submit" class="btn">Buscar</button>
+    </form>
+    
+    {% if query or materia_filter %}
+        <h2>Resultados de búsqueda</h2>
+        {% if profesores %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Especialidad</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for profesor in profesores %}
+                    <tr>
+                        <td>{{ profesor.nombre }} {{ profesor.apellido }}</td>
+                        <td>{{ profesor.especialidad }}</td>
+                        <td>
+                            <a href="{% url 'detalle_profesor' profesor.id_profesor %}" class="btn" style="padding: 0.3rem 0.6rem;">Ver Perfil</a>
+                            <a href="{% url 'solicitar_clase' profesor.id_profesor %}" class="btn" style="padding: 0.3rem 0.6rem;">Solicitar Clase</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="alert alert-info">
+                No se encontraron profesores con esos criterios.
+            </div>
+        {% endif %}
+    {% endif %}
+</div>
+{% endblock %}
