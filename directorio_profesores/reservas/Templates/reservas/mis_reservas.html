@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Mis Reservas{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>📋 Mis Reservas de Clases</h1>
+    
+    {% if reservas %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Fecha</th>
+                    <th>Alumno</th>
+                    <th>Profesor</th>
+                    <th>Materia</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reserva in reservas %}
+                <tr>
+                    <td>#{{ reserva.id_reserva }}</td>
+                    <td>{{ reserva.fecha_reserva|date:"d/m/Y H:i" }}</td>
+                    <td>{{ reserva.id_alumno.nombre }} {{ reserva.id_alumno.apellido }}</td>
+                    <td>{{ reserva.id_profesor.nombre }} {{ reserva.id_profesor.apellido }}</td>
+                    <td>{{ reserva.id_materia.nombre_materia }}</td>
+                    <td><span style="background: #4CAF50; color: white; padding: 0.2rem 0.5rem; border-radius: 4px;">{{ reserva.estado }}</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info">
+            No tienes reservas aún. <a href="{% url 'buscar' %}">Buscar profesores</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

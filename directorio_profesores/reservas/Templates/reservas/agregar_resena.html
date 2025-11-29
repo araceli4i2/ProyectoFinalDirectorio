@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Agregar Reseña{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>⭐ Calificar a {{ profesor.get_nombre_completo }}</h1>
+    <p><strong>Especialidad:</strong> {{ profesor.especialidad }}</p>
+    
+    <form method="POST">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="{{ form.id_alumno.id_for_label }}">{{ form.id_alumno.label }}</label>
+            {{ form.id_alumno }}
+            {% if form.id_alumno.errors %}
+                <div class="alert alert-danger" style="margin-top: 0.5rem;">
+                    {{ form.id_alumno.errors }}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.calificacion.id_for_label }}">{{ form.calificacion.label }}</label>
+            <select id="{{ form.calificacion.id_for_label }}" name="calificacion" class="form-control" required>
+                <option value="">Seleccione una calificación</option>
+                <option value="5">⭐⭐⭐⭐⭐ (5 - Excelente)</option>
+                <option value="4">⭐⭐⭐⭐ (4 - Muy Bueno)</option>
+                <option value="3">⭐⭐⭐ (3 - Bueno)</option>
+                <option value="2">⭐⭐ (2 - Regular)</option>
+                <option value="1">⭐ (1 - Malo)</option>
+            </select>
+            {% if form.calificacion.errors %}
+                <div class="alert alert-danger" style="margin-top: 0.5rem;">
+                    {{ form.calificacion.errors }}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.comentario.id_for_label }}">{{ form.comentario.label }}</label>
+            {{ form.comentario }}
+            {% if form.comentario.errors %}
+                <div class="alert alert-danger" style="margin-top: 0.5rem;">
+                    {{ form.comentario.errors }}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div style="display: flex; gap: 1rem;">
+            <button type="submit" class="btn">📝 Publicar Reseña</button>
+            <a href="{% url 'detalle_profesor' profesor.id_profesor %}" class="btn btn-secondary">❌ Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Solicitar Clase{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>📚 Solicitar Clase con {{ profesor.get_nombre_completo }}</h1>
+    
+    <p><strong>Especialidad:</strong> {{ profesor.especialidad }}</p>
+    
+    <form method="POST">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="{{ form.id_alumno.id_for_label }}">{{ form.id_alumno.label }}</label>
+            {{ form.id_alumno }}
+            {% if form.id_alumno.errors %}
+                <div class="alert alert-danger" style="margin-top: 0.5rem;">
+                    {{ form.id_alumno.errors }}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.id_materia.id_for_label }}">{{ form.id_materia.label }}</label>
+            {{ form.id_materia }}
+            {% if form.id_materia.errors %}
+                <div class="alert alert-danger" style="margin-top: 0.5rem;">
+                    {{ form.id_materia.errors }}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.requerimientos.id_for_label }}">{{ form.requerimientos.label }}</label>
+            {{ form.requerimientos }}
+            {% if form.requerimientos.errors %}
+                <div class="alert alert-danger" style="margin-top: 0.5rem;">
+                    {{ form.requerimientos.errors }}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div style="display: flex; gap: 1rem;">
+            <button type="submit" class="btn">📩 Enviar Solicitud</button>
+            <a href="{% url 'detalle_profesor' profesor.id_profesor %}" class="btn btn-secondary">❌ Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
