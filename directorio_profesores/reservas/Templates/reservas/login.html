@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Iniciar Sesión{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 500px; margin: 2rem auto;">
+    <h1>🔐 Iniciar Sesión</h1>
+    
+    <form method="POST">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="username">Usuario:</label>
+            <input type="text" id="username" name="username" class="form-control" required autofocus>
+        </div>
+        
+        <div class="form-group">
+            <label for="password">Contraseña:</label>
+            <input type="password" id="password" name="password" class="form-control" required>
+        </div>
+        
+        <button type="submit" class="btn">Ingresar</button>
+        
+        <p style="margin-top: 1rem;">
+            ¿No tienes cuenta? <a href="{% url 'registro' %}">Regístrate aquí</a>
+        </p>
+    </form>
+</div>
+{% endblock %}

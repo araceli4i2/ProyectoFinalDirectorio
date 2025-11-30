@@ -71,7 +71,7 @@ class Materia(models.Model):
         validators=[MinValueValidator(0)]
     )
     
-    # ForeignKey mejorada con related_name
+    # ForeignKey 
     id_profesor = models.ForeignKey(
         Profesor, 
         on_delete=models.CASCADE, 

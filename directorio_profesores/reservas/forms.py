@@ -127,13 +127,6 @@ class MateriaForm(forms.Form):
             for p in profesores
         ]
 
-    #def __init__(self, *args, **kwargs):
-     #   super().__init__(*args, **kwargs)
-        # Llenar el dropdown de profesores
-      #  self.fields['id_profesor'].choices = [
-       #     (p.id_profesor, f"{p.nombre} {p.apellido}") 
-        #    for p in Profesor.objects.all()
-       # ]
 
 class ReservaClaseForm(forms.Form):
     id_alumno = forms.ChoiceField(

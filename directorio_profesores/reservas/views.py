@@ -6,6 +6,12 @@ from .forms import (
     ProfesorForm, AlumnoForm, MateriaForm, 
     ReservaClaseForm, ResenaForm, BusquedaForm
 )
+#===================para el login===================
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User, Group
 
 # ============= VISTA PRINCIPAL/HOME =============
 
@@ -96,6 +102,9 @@ def listar_profesores(request):
             'profesores': []
         })
 
+# Ejemplo: Profesores y coordinadores pueden ver detalles
+@login_required
+@permission_required('reservas.view_profesor', raise_exception=True)
 def detalle_profesor(request, id_profesor):
     try:
         profesor = get_object_or_404(Profesor, id_profesor=id_profesor)
@@ -112,8 +121,15 @@ def detalle_profesor(request, id_profesor):
     except Exception as e:
         messages.error(request, f'Error al cargar el profesor: {str(e)}')
         return redirect('listar_profesores')
-
+        
+# Ejemplo: Solo coordinadores pueden crear profesores
+@login_required
+@permission_required('reservas.add_profesor', raise_exception=True)
 def crear_profesor(request):
+    # Verificar si el usuario tiene permiso
+    if not request.user.groups.filter(name='Coordinador').exists() and not request.user.is_superuser:
+        raise PermissionDenied("Solo los coordinadores pueden crear profesores")
+    
     if request.method == 'POST':
         form = ProfesorForm(request.POST)
         if form.is_valid():
@@ -367,7 +383,9 @@ def eliminar_materia(request, id_materia):
     })
 
 # ============= RESERVAS =============
-
+ #Ejemplo: Solo alumnos pueden solicitar clases
+@login_required
+@permission_required('reservas.add_reservaclase', raise_exception=True)
 def solicitar_clase(request, id_profesor):
     profesor = get_object_or_404(Profesor, id_profesor=id_profesor)
     
@@ -497,4 +515,127 @@ def eliminar_resena(request, id_resena):
     return render(request, 'reservas/confirmar_eliminar_resena.html', {
         'resena': resena
     })
+#================LOGIN=======================
+# ============= AUTENTICACIÓN =============
 
+def login_view(request):
+    """Vista de inicio de sesión"""
+    # Si el usuario ya está autenticado, redirigir al home
+    if request.user.is_authenticated:
+        return redirect('home')
+    
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        
+        if user is not None:
+            login(request, user)
+            messages.success(request, f'¡Bienvenido {user.first_name or user.username}!')
+            
+            # Redirigir según el grupo del usuario
+            if user.groups.filter(name='Coordinador').exists():
+                return redirect('home')
+            elif user.groups.filter(name='Profesor').exists():
+                return redirect('mis_reservas')
+            elif user.groups.filter(name='Alumno').exists():
+                return redirect('buscar')
+            else:
+                return redirect('home')
+        else:
+            messages.error(request, 'Usuario o contraseña incorrectos.')
+    
+    return render(request, 'reservas/login.html')
+
+
+def logout_view(request):
+    """Vista de cierre de sesión"""
+    logout(request)
+    messages.success(request, 'Has cerrado sesión correctamente.')
+    return redirect('login')
+
+
+def registro_view(request):
+    """Vista de registro de nuevos usuarios"""
+    # Si el usuario ya está autenticado, redirigir al home
+    if request.user.is_authenticated:
+        return redirect('home')
+    
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        password2 = request.POST.get('password2')
+        nombre = request.POST.get('nombre')
+        apellido = request.POST.get('apellido')
+        rol = request.POST.get('rol')  # 'alumno' o 'profesor'
+        ci = request.POST.get('ci', '')  # Campo CI (requerido para alumnos)
+        
+        # Validaciones
+        if password != password2:
+            messages.error(request, 'Las contraseñas no coinciden.')
+        elif len(password) < 6:
+            messages.error(request, 'La contraseña debe tener al menos 6 caracteres.')
+        elif User.objects.filter(username=username).exists():
+            messages.error(request, 'El nombre de usuario ya existe.')
+        elif User.objects.filter(email=email).exists():
+            messages.error(request, 'El email ya está registrado.')
+        elif rol == 'alumno' and not ci:
+            messages.error(request, 'El CI es requerido para registrarse como alumno.')
+        elif rol == 'alumno' and Alumno.objects.filter(ci=ci).exists():
+            messages.error(request, 'Ya existe un alumno registrado con ese CI.')
+        else:
+            try:
+                # Crear usuario de Django
+                user = User.objects.create_user(
+                    username=username,
+                    email=email,
+                    password=password,
+                    first_name=nombre,
+                    last_name=apellido
+                )
+                
+                # Asignar al grupo según el rol
+                if rol == 'profesor':
+                    grupo = Group.objects.get(name='Profesor')
+                    user.groups.add(grupo)
+                    
+                    # Crear registro en modelo Profesor
+                    Profesor.objects.create(
+                        nombre=nombre,
+                        apellido=apellido,
+                        especialidad='Por definir',
+                        salario=0
+                    )
+                    messages.success(request, 'Cuenta de profesor creada exitosamente. Por favor completa tu perfil.')
+                    
+                elif rol == 'alumno':
+                    grupo = Group.objects.get(name='Alumno')
+                    user.groups.add(grupo)
+                    
+                    # ✅ CREAR REGISTRO EN MODELO ALUMNO (ESTO FALTABA)
+                    Alumno.objects.create(
+                        nombre=nombre,
+                        apellido=apellido,
+                        ci=ci
+                    )
+                    messages.success(request, 'Cuenta de alumno creada exitosamente. Ya puedes iniciar sesión.')
+                
+                else:
+                    # Si no se seleccionó un rol válido
+                    user.delete()
+                    messages.error(request, 'Debe seleccionar un tipo de usuario válido.')
+                    return render(request, 'reservas/registro.html')
+                
+                return redirect('login')
+                
+            except Group.DoesNotExist:
+                messages.error(request, f'El grupo "{rol}" no existe. Contacta al administrador.')
+                if 'user' in locals():
+                    user.delete()  # Eliminar el usuario si no se pudo asignar el grupo
+            except Exception as e:
+                messages.error(request, f'Error al crear la cuenta: {str(e)}')
+                if 'user' in locals():
+                    user.delete()  # Eliminar el usuario si hubo algún error
+    
+    return render(request, 'reservas/registro.html')

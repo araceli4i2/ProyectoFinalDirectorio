@@ -27,5 +27,10 @@ urlpatterns = [
       # URLs de reseñas
     path('agregar-resena/<int:id_profesor>/', views.agregar_resena, name='agregar_resena'),
 
+    # URLs de autenticación
+    path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
+    path('registro/', views.registro_view, name='registro'),
+
 
 ]
