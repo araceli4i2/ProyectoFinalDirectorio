@@ -12,7 +12,9 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User, Group
-
+#===========error 403=================
+from django.core.exceptions import PermissionDenied
+from functools import wraps
 # ============= VISTA PRINCIPAL/HOME =============
 
 def home(request):
@@ -613,7 +615,7 @@ def registro_view(request):
                     grupo = Group.objects.get(name='Alumno')
                     user.groups.add(grupo)
                     
-                    # ✅ CREAR REGISTRO EN MODELO ALUMNO (ESTO FALTABA)
+                    # CREAR REGISTRO EN MODELO ALUMNO (ESTO FALTABA)
                     Alumno.objects.create(
                         nombre=nombre,
                         apellido=apellido,
@@ -639,3 +641,9 @@ def registro_view(request):
                     user.delete()  # Eliminar el usuario si hubo algún error
     
     return render(request, 'reservas/registro.html')
+# ============= MANEJO DE ERRORES =============
+
+def error_403(request, exception=None):
+    """Vista personalizada para error 403 - Acceso Denegado"""
+    return render(request, 'reservas/403.html', status=403)
+

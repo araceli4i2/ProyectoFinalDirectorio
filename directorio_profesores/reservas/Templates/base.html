@@ -271,15 +271,35 @@
     <div class="container">
         <!-- Navbar -->
         <nav class="navbar">
-            <ul>
-                <li><a href="{% url 'home' %}">🏠 Inicio</a></li>
-                <li><a href="{% url 'buscar' %}">🔍 Buscar</a></li>
-                <li><a href="{% url 'listar_profesores' %}">👨‍🏫 Profesores</a></li>
-                <li><a href="{% url 'mis_reservas' %}">📋 Reservas</a></li>
+    <ul>
+        {% if user.is_authenticated %}
+            <li><a href="{% url 'home' %}">🏠 Inicio</a></li>
+            <li><a href="{% url 'buscar' %}">🔍 Buscar</a></li>
+            <li><a href="{% url 'listar_profesores' %}">👨‍🏫 Profesores</a></li>
+            
+            {% if user.groups.all.0.name == 'Coordinador' %}
                 <li><a href="{% url 'crear_profesor' %}">➕ Nuevo Profesor</a></li>
                 <li><a href="/admin/">⚙️ Admin</a></li>
-            </ul>
-        </nav>
+            {% endif %}
+            
+            {% if user.groups.all.0.name == 'Alumno' or user.groups.all.0.name == 'Profesor' %}
+                <li><a href="{% url 'mis_reservas' %}">📋 Mis Reservas</a></li>
+            {% endif %}
+            
+            <li style="margin-left: auto;">
+                <span style="color: white; margin-right: 1rem;">
+                    👤 {{ user.first_name }} ({{ user.groups.all.0.name }})
+                </span>
+                <a href="{% url 'logout' %}" class="btn btn-danger" style="padding: 0.5rem 1rem;">
+                    Cerrar Sesión
+                </a>
+            </li>
+        {% else %}
+            <li><a href="{% url 'login' %}">🔐 Iniciar Sesión</a></li>
+            <li><a href="{% url 'registro' %}">📝 Registro</a></li>
+        {% endif %}
+    </ul>
+</nav>
 
         <!-- Messages -->
         {% if messages %}

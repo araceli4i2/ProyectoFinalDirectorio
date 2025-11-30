@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Acceso Denegado{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 600px; margin: 2rem auto; text-align: center;">
+    <div style="font-size: 5rem; margin-bottom: 1rem;">🚫</div>
+    
+    <h1 style="color: #e74c3c; margin-bottom: 1rem;">Acceso Denegado</h1>
+    
+    <p style="font-size: 1.2rem; color: #666; margin-bottom: 2rem;">
+        <strong>No tienes permisos para acceder a esta página</strong>
+    </p>
+    
+    <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem;">
+        <p style="margin: 0; color: #856404;">
+            ⚠️ Tu rol actual <strong>({{ user.groups.all.0.name|default:"Sin rol asignado" }})</strong> 
+            no tiene los permisos necesarios para realizar esta acción.
+        </p>
+    </div>
+    
+    {% if user.is_authenticated %}
+        <div style="margin-bottom: 1.5rem;">
+            <p style="color: #666;">Estás conectado como: <strong>{{ user.first_name }} {{ user.last_name }}</strong></p>
+        </div>
+    {% endif %}
+    
+    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a href="{% url 'home' %}" class="btn">🏠 Volver al Inicio</a>
+        
+        {% if user.is_authenticated %}
+            <a href="javascript:history.back()" class="btn btn-secondary">⬅️ Volver Atrás</a>
+        {% else %}
+            <a href="{% url 'login' %}" class="btn btn-secondary">🔐 Iniciar Sesión</a>
+        {% endif %}
+    </div>
+    
+    <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #ddd;">
+        <h3 style="color: #667eea; margin-bottom: 1rem;">ℹ️ Posibles soluciones:</h3>
+        <ul style="text-align: left; color: #666; line-height: 1.8;">
+            <li>Verifica que hayas iniciado sesión con el usuario correcto</li>
+            <li>Contacta al administrador si crees que deberías tener acceso</li>
+            <li>Asegúrate de tener el rol adecuado asignado</li>
+        </ul>
+    </div>
+</div>
+
+<div style="max-width: 600px; margin: 1rem auto; padding: 1.5rem; background: white; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+    <h3 style="color: #667eea; margin-bottom: 1rem;">🔐 Roles y Permisos del Sistema</h3>
+    
+    <div style="background: #f8f9fa; padding: 1rem; border-radius: 5px; margin-bottom: 1rem;">
+        <strong style="color: #667eea;">👑 Coordinador:</strong>
+        <p style="margin: 0.5rem 0 0 0; color: #666;">Acceso completo - Gestión de profesores, materias y supervisión</p>
+    </div>
+    
+    <div style="background: #f8f9fa; padding: 1rem; border-radius: 5px; margin-bottom: 1rem;">
+        <strong style="color: #667eea;">👨‍🏫 Profesor:</strong>
+        <p style="margin: 0.5rem 0 0 0; color: #666;">Ver y editar su perfil, gestionar materias, ver reservas</p>
+    </div>
+    
+    <div style="background: #f8f9fa; padding: 1rem; border-radius: 5px;">
+        <strong style="color: #667eea;">👨‍🎓 Alumno:</strong>
+        <p style="margin: 0.5rem 0 0 0; color: #666;">Buscar profesores, solicitar clases, dejar reseñas</p>
+    </div>
+</div>
+{% endblock %}
