@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Lista de Alumnos - Directorio de Profesores{% endblock %}
+
+{% block content %}
+
+<div class="card">
+    <h1>Estudiantes Registrados</h1>
+    <p class="text-muted">Total de alumnos: <strong>{{ alumnos|length }}</strong></p>
+
+    <!-- Botón para crear nuevo alumno -->
+    <div style="margin-bottom: 1.5rem;">
+        <a href="{% url 'crear_alumno' %}" class="btn">
+            Nuevo Alumno
+        </a>
+    </div>
+
+    {% if alumnos %}
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nombre Completo</th>
+                    <th>Carnet de Identidad</th>
+                    <th>Fecha de Registro</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for alumno in alumnos %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>
+                        <strong>{{ alumno.nombre }} {{ alumno.apellido }}</strong>
+                    </td>
+                    <td>{{ alumno.ci }}</td>
+                    <td>{{ alumno.fecha_registro|date:"d/m/Y H:i" }}</td>
+                    <td>
+                        <a href="{% url 'editar_alumno' alumno.id_alumno %}" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">
+                            Editar
+                        </a>
+                        <a href="{% url 'eliminar_alumno' alumno.id_alumno %}" class="btn btn-danger" style="padding: 0.5rem 1rem; font-size: 0.9rem;"
+                           onclick="return confirm('¿Estás seguro de eliminar a {{ alumno.get_nombre_completo }}?')">
+                            Eliminar
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info" style="text-align: center; padding: 2rem;">
+            <p>No hay alumnos registrados aún.</p>
+            <a href="{% url 'crear_alumno' %}" class="btn">Crear el primer alumno</a>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

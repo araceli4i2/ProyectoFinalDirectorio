@@ -8,9 +8,31 @@
     <p>Este sistema te permite gestionar profesores, materias y reservas de clases.</p>
     
     <h2>Acciones Rápidas</h2>
-    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
-        <a href="{% url 'listar_profesores' %}" class="btn">Ver Profesores</a>
-        <a href="{% url 'crear_profesor' %}" class="btn">Agregar Profesor</a>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 1rem;">
+        
+        <!-- Sección de Profesores -->
+        <div style="border: 1px solid #ddd; padding: 1.5rem; border-radius: 0.5rem;">
+            <h3 style="margin-top: 0;">Profesores</h3>
+            <p class="text-muted" style="font-size: 0.9rem;">Total: <strong>{{ total_profesores }}</strong></p>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <a href="{% url 'listar_profesores' %}" class="btn" style="text-align: center;">Ver Profesores</a>
+                <a href="{% url 'crear_profesor' %}" class="btn btn-secondary" style="text-align: center;">Agregar Profesor</a>
+            </div>
+        </div>
+
+        <!-- Sección de Alumnos -->
+        <div style="border: 1px solid #ddd; padding: 1.5rem; border-radius: 0.5rem;">
+            <h3 style="margin-top: 0;">Alumnos</h3>
+            <p class="text-muted" style="font-size: 0.9rem;">Total: <strong>{{ total_alumnos }}</strong></p>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <a href="{% url 'listar_alumnos' %}" class="btn" style="text-align: center;">Ver Alumnos</a>
+                <a href="{% url 'crear_alumno' %}" class="btn btn-secondary" style="text-align: center;">Agregar Alumno</a>
+            </div>
+        </div>
+
+    </div>
+
+    <div style="margin-top: 1.5rem;">
         <a href="/admin/" class="btn btn-secondary">Panel de Admin</a>
     </div>
 </div>

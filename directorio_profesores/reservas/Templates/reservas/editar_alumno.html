@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Editar Alumno - Directorio de Profesores{% endblock %}
+
+{% block content %}
+
+<div class="card" style="max-width: 600px; margin: 0 auto;">
+    <h1>Editar Alumno</h1>
+    <p class="text-muted">Alumno: <strong>{{ alumno.get_nombre_completo }}</strong></p>
+    
+    <form method="POST">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="{{ form.nombre.id_for_label }}">Nombre</label>
+            {{ form.nombre }}
+            {% if form.nombre.errors %}
+                <small class="error">{{ form.nombre.errors.0 }}</small>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.apellido.id_for_label }}">Apellido</label>
+            {{ form.apellido }}
+            {% if form.apellido.errors %}
+                <small class="error">{{ form.apellido.errors.0 }}</small>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.ci.id_for_label }}">Carnet de Identidad</label>
+            {{ form.ci }}
+            {% if form.ci.errors %}
+                <small class="error">{{ form.ci.errors.0 }}</small>
+            {% endif %}
+        </div>
+
+        <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+            <button type="submit" class="btn" style="flex: 1;">
+                Guardar Cambios
+            </button>
+            <a href="{% url 'listar_alumnos' %}" class="btn btn-secondary" style="flex: 1; text-align: center;">
+                Cancelar
+            </a>
+        </div>
+    </form>
+
+    {% if messages %}
+        <div style="margin-top: 1rem;">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}
