@@ -98,7 +98,7 @@ class ReservaClase(models.Model):
         ('Pendiente', 'Pendiente'),
         ('Confirmada', 'Confirmada'),
         ('Cancelada', 'Cancelada'),
-        ('Completada', 'Completada'),
+    
     ]
     
     id_reserva = models.AutoField(primary_key=True)

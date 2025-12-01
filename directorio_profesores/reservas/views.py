@@ -438,7 +438,7 @@ def cambiar_estado_reserva(request, id_reserva):
     
     if request.method == 'POST':
         nuevo_estado = request.POST.get('estado')
-        if nuevo_estado in ['Pendiente', 'Confirmada', 'Cancelada', 'Completada']:
+        if nuevo_estado in ['Pendiente', 'Confirmada', 'Cancelada']:
             try:
                 reserva.estado = nuevo_estado
                 reserva.save()
