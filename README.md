@@ -51,12 +51,16 @@ La estructura de directorios principal es la siguiente:
  ┃ ┃ ┃ ┣ 📜403.html
  ┃ ┃ ┃ ┣ 📜agregar_resena.html
  ┃ ┃ ┃ ┣ 📜buscar.html
+ ┃ ┃ ┃ ┣ 📜confirmar_eliminar_alumno.html
  ┃ ┃ ┃ ┣ 📜confirmar_eliminar.html
+ ┃ ┃ ┃ ┣ 📜crear_alumno.html
  ┃ ┃ ┃ ┣ 📜crear_profesor.html
  ┃ ┃ ┃ ┣ 📜detalle_materia.html
  ┃ ┃ ┃ ┣ 📜detalle_profesor.html
+ ┃ ┃ ┃ ┣ 📜editar_alumno.html
  ┃ ┃ ┃ ┣ 📜editar_profesor.html
  ┃ ┃ ┃ ┣ 📜home.html
+ ┃ ┃ ┃ ┣ 📜lista_alumnos.html
  ┃ ┃ ┃ ┣ 📜lista_materias.html
  ┃ ┃ ┃ ┣ 📜lista_profesores.html
  ┃ ┃ ┃ ┣ 📜login.html
