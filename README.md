@@ -84,6 +84,11 @@ La estructura de directorios principal es la siguiente:
 ### Instalación y Configuración
 
 Sigue estos pasos para poder clonar el proyecto:
+### archivo de dependencias
+
+```bash
+pip install -r requerimientos.txt
+````
 
 ### Clonar el Repositorio
 
